@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Heisenberg Lab Control</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #33ccff;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            border: 2px solid #33ccff;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 20px rgba(51, 204, 255, 0.2);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        button {
+            background: transparent;
+            color: #33ccff;
+            border: 1px solid #33ccff;
+            padding: 15px 25px;
+            margin: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: none;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #33ccff;
+            color: #000;
+        }
+
+        #start-btn { display: inline-block; font-size: 22px; }
+
+        #status { margin-bottom: 20px; font-size: 1.4em; color: #33ccff; }
+
+        .active { display: inline-block !important; }
+
+        /* Стили для картинки */
+        #final-product {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+            border: 5px solid white;
+            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        /* Стиль для печати */
+        @media print {
+            body * { visibility: hidden; }
+            #final-product, #final-product * { visibility: visible; }
+            #final-product {
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: block !important;
+            }
+        }
+
+        .heat { animation: shake 0.5s infinite; border-color: red !important; color: red !important; }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px); }
+            50% { transform: translate(-1px, -2px); }
+            100% { transform: translate(1px, 1px); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="main-ui">
+    <div id="status">СИСТЕМА ГОТОВА</div>
+    
+    <button id="start-btn" onclick="nextStep(1)">НАЧАТЬ ВАРКУ</button>
+    
+    <button id="step2" onclick="nextStep(2)">ВЗЯТЬ КРУГЛОДОННЫЕ КОЛБЫ</button>
+    <button id="step3" onclick="nextStep(3)">ЗАЛИТЬ ФЕНИЛАЦЕТОН</button>
+    <button id="step4" onclick="nextStep(4)">ДОБАВИТЬ МЕТИЛАМИН</button>
+    <button id="step5" onclick="nextStep(5)">АЛЮМИНИЕВАЯ АМАЛЬГАМА</button>
+    <button id="step6" onclick="nextStep(6)">ПОВЫСИТЬ ТЕМПЕРАТУРУ</button>
+    <button id="step7" onclick="nextStep(7)">ДИСТИЛЛЯЦИЯ</button>
+    <button id="step8" onclick="nextStep(8)">ПРОМЫВКА</button>
+    <button id="step9" onclick="nextStep(9)">ПОЛУЧИТЬ КРИСТАЛЛЫ</button>
+
+    <div id="result-area">
+        <img id="final-product" src="product.png" alt="Чистый продукт">
+        <br>
+        <button id="print-btn" onclick="window.print()">РАСПЕЧАТАТЬ ПАРТИЮ</button>
+    </div>
+</div>
+
+<script>
+    const log = {
+        1: "Процесс запущен...", 2: "Оборудование подготовлено.",
+        3: "Реактив залит.", 4: "Синтез начался.",
+        5: "Реакция пошла!", 6: "ТЕМПЕРАТУРА НА ПРЕДЕЛЕ!",
+        7: "Очистка...", 8: "Почти готово...",
+        9: "99.1% ЧИСТОТЫ. РЕЗУЛЬТАТ ПЕРЕД ВАМИ."
+    };
+
+    function nextStep(step) {
+        // Скрываем текущую кнопку
+        const currentId = step === 1 ? 'start-btn' : 'step' + step;
+        document.getElementById(currentId).style.display = 'none';
+
+        // Показываем следующую
+        const next = step + 1;
+        const nextBtn = document.getElementById('step' + next);
+        const ui = document.getElementById('main-ui');
+
+        if (nextBtn) {
+            nextBtn.classList.add('active');
+        }
+
+        // Спецэффект на температуре
+        if (step === 5) ui.classList.add('heat');
+        if (step === 6) ui.classList.remove('heat');
+
+        document.getElementById('status').innerText = log[step];
+
+        // Финал
+        if (step === 9) {
+            document.getElementById('final-product').style.display = 'inline-block';
+            document.getElementById('print-btn').classList.add('active');
+            document.body.style.backgroundColor = "#002244";
+        }
+    }
+</script>
+
+</body>
+</html>
